@@ -10,22 +10,22 @@ namespace AOC2019
     {
         static string input = @"3,8,1001,8,10,8,105,1,0,0,21,42,67,84,109,126,207,288,369,450,99999,3,9,102,4,9,9,1001,9,4,9,102,2,9,9,101,2,9,9,4,9,99,3,9,1001,9,5,9,1002,9,5,9,1001,9,5,9,1002,9,5,9,101,5,9,9,4,9,99,3,9,101,5,9,9,1002,9,3,9,1001,9,2,9,4,9,99,3,9,1001,9,2,9,102,4,9,9,101,2,9,9,102,4,9,9,1001,9,2,9,4,9,99,3,9,102,2,9,9,101,5,9,9,1002,9,2,9,4,9,99,3,9,1002,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,101,2,9,9,4,9,3,9,101,2,9,9,4,9,3,9,1001,9,2,9,4,9,3,9,101,2,9,9,4,9,3,9,1001,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,1001,9,1,9,4,9,99,3,9,1001,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,1001,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,102,2,9,9,4,9,3,9,1001,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,99,3,9,102,2,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,101,1,9,9,4,9,3,9,101,1,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,101,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,101,1,9,9,4,9,3,9,101,2,9,9,4,9,99,3,9,1001,9,2,9,4,9,3,9,101,1,9,9,4,9,3,9,101,2,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1001,9,2,9,4,9,3,9,1001,9,1,9,4,9,3,9,101,1,9,9,4,9,3,9,102,2,9,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,99,3,9,102,2,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,101,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1002,9,2,9,4,9,3,9,101,1,9,9,4,9,3,9,102,2,9,9,4,9,3,9,1001,9,2,9,4,9,99";
 
-        public static int GetAddress(int[] data, int position, int opMode)
-        {
-            if (opMode == 0) // Position mode
-            {
-                return data[position];
-            }
-
-            return position; // Immediate mode
-        }
-
         public class Amplifier
         {
             private readonly int[] data = input.Split(',').Select(x => int.Parse(x)).ToArray();
             private int position = 0;
             public bool IsDone { get; set; }
             public bool NeedsNewInput { get; set; }
+
+            private int GetAddress(int opMode)
+            {
+                if (opMode == 0) // Position mode
+                {
+                    return data[position];
+                }
+
+                return position; // Immediate mode
+            }
 
             public int Run(int input)
             {
@@ -46,7 +46,7 @@ namespace AOC2019
                     int[] opModes = Enumerable.Range(0, maxParameters).Select(x => (opcode / ((int)Math.Pow(10, 2 + x))) % 2).ToArray();
                     opcode = opcode % 100;
 
-                    int op1 = GetAddress(data, position, opModes[0]);
+                    int op1 = GetAddress(opModes[0]);
                     position++;
 
                     if (opcode == 3)
@@ -66,7 +66,7 @@ namespace AOC2019
                         return data[op1];
                     }
 
-                    int op2 = GetAddress(data, position, opModes[1]);
+                    int op2 = GetAddress(opModes[1]);
                     position++;
 
                     if (opcode == 5)
@@ -86,7 +86,7 @@ namespace AOC2019
                         continue;
                     }
 
-                    int op3 = GetAddress(data, position, opModes[2]);
+                    int op3 = GetAddress(opModes[2]);
                     position++;
 
                     if (opcode == 1)
